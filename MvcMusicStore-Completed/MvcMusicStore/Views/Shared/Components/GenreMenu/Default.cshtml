@@ -1,0 +1,12 @@
+@model IEnumerable<MvcMusicStore.Models.Genre>
+
+<ul id="categories">
+    @foreach (var genre in Model)
+    {
+        <li>
+            <a asp-controller="Store" asp-action="Browse" asp-route-Genre="@genre.Name">
+                @genre.Name
+            </a>
+        </li>
+    }
+</ul>

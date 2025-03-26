@@ -1,22 +1,27 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MvcMusicStore.Models;
 
 namespace MvcMusicStore.Controllers
 {
     public class StoreController : Controller
     {
-        MusicStoreEntities storeDB = new MusicStoreEntities();
+        private readonly MusicStoreEntities _storeDB;
+
+        public StoreController(MusicStoreEntities storeDB)
+        {
+            _storeDB = storeDB;
+        }
 
         //
         // GET: /Store/
 
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            var genres = storeDB.Genres.ToList();
+            var genres = _storeDB.Genres.ToList();
 
             return View(genres);
         }
@@ -24,11 +29,17 @@ namespace MvcMusicStore.Controllers
         //
         // GET: /Store/Browse?genre=Disco
 
-        public ActionResult Browse(string genre)
+        public IActionResult Browse(string genre)
         {
             // Retrieve Genre and its Associated Albums from database
-            var genreModel = storeDB.Genres.Include("Albums")
-                .Single(g => g.Name == genre);
+            var genreModel = _storeDB.Genres
+                .Include(g => g.Albums)
+                .SingleOrDefault(g => g.Name == genre);
+
+            if (genreModel == null)
+            {
+                return NotFound();
+            }
 
             return View(genreModel);
         }
@@ -36,23 +47,19 @@ namespace MvcMusicStore.Controllers
         //
         // GET: /Store/Details/5
 
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
-            var album = storeDB.Albums.Find(id);
+            var album = _storeDB.Albums
+                .Include(a => a.Artist)
+                .Include(a => a.Genre)
+                .FirstOrDefault(a => a.AlbumId == id);
+
+            if (album == null)
+            {
+                return NotFound();
+            }
 
             return View(album);
         }
-
-        //
-        // GET: /Store/GenreMenu
-
-        [ChildActionOnly]
-        public ActionResult GenreMenu()
-        {
-            var genres = storeDB.Genres.ToList();
-
-            return PartialView(genres);
-        }
-
     }
 }

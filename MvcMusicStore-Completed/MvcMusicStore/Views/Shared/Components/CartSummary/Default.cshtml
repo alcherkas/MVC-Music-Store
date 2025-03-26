@@ -1,0 +1,6 @@
+@{
+    var cartCount = ViewData["CartCount"] ?? 0;
+}
+<a asp-controller="ShoppingCart" asp-action="Index" id="cart-status">
+    Cart (@cartCount)
+</a>
