@@ -50,13 +50,7 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/Content"
 });
 
-// Use static files from Scripts folder
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "Scripts")),
-    RequestPath = "/Scripts"
-});
+// Scripts folder has been removed in .NET 8 migration
 
 app.UseRouting();
 
