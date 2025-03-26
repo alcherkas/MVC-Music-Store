@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MvcMusicStore.Models
 {
-    [Bind(Exclude = "OrderId")]
+    [BindNever]
     public partial class Order
     {
         [ScaffoldColumn(false)]
         public int OrderId { get; set; }
 
         [ScaffoldColumn(false)]
-        public System.DateTime OrderDate { get; set; }
+        public DateTime OrderDate { get; set; }
 
         [ScaffoldColumn(false)]
         public string Username { get; set; }
